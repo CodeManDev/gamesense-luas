@@ -20,8 +20,6 @@ local function on_paint_ui()
     end
 end
 
-client.set_event_callback("paint_ui", on_paint_ui)
-
 ui.set_callback(master_switch, function()
     func = ui.get(master_switch) and client.set_event_callback or client.unset_event_callback
 
