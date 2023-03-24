@@ -62,7 +62,7 @@ references["Aimbot"] = {}
 references["Other"] = {}
 
 for _, setting in ipairs(adaptive_settings) do
-    local ref = ui.reference("Rage", "Aimbot", setting)
+    local ref = { ui.reference("Rage", "Aimbot", setting) }
     table.insert(references["Aimbot"], {setting, ref})
 end
 
@@ -88,7 +88,14 @@ local function export()
             local setting_name = setting[1]
             local ref = setting[2]
 
-            settings["Aimbot"][tab][setting_name] = ui.get(ref)
+            if #ref > 1 then
+                settings["Aimbot"][tab][setting_name] = {}
+                for i = 1, #ref do
+                    settings["Aimbot"][tab][setting_name][i] = ui.get(ref[i])
+                end
+            else
+                settings["Aimbot"][tab][setting_name] = ui.get(ref[1])
+            end
         end
     end
 
@@ -133,7 +140,13 @@ local function import()
             local ref = setting[2]
 
             local result = pcall(function() 
-                ui.set(ref, settings["Aimbot"][tab][setting_name])
+                if #ref > 1 then
+                    for i = 1, #ref do
+                        ui.set(ref[i], settings["Aimbot"][tab][setting_name][i])
+                    end
+                else
+                    ui.set(ref[1], settings["Aimbot"][tab][setting_name])
+                end
             end)
 
             if not result then
